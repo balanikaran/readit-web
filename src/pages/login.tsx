@@ -9,6 +9,8 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { Flex, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 interface loginProps {}
 
@@ -20,11 +22,11 @@ const Login: React.FC<loginProps> = ({}) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
           const response = await login({
-            username: values.username,
+            usernameOrEmail: values.usernameOrEmail,
             password: values.password,
           });
 
@@ -39,9 +41,9 @@ const Login: React.FC<loginProps> = ({}) => {
         {({ isSubmitting }) => (
           <Form>
             <InputField
-              name="username"
-              placeholder="username"
-              label="Username"
+              name="usernameOrEmail"
+              placeholder="username or email"
+              label="Username / Email"
             />
             <Box mt="8">
               <InputField
@@ -51,6 +53,11 @@ const Login: React.FC<loginProps> = ({}) => {
                 type="password"
               />
             </Box>
+            <Flex mt={4}>
+              <NextLink href="/forgotPassword">
+                <Link ml={"auto"}>forgot password?</Link>
+              </NextLink>
+            </Flex>
             <Button
               type="submit"
               colorScheme="teal"
