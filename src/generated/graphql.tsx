@@ -40,6 +40,7 @@ export type Mutation = {
 
 
 export type MutationCreatePostArgs = {
+  text: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -79,9 +80,12 @@ export type MutationChangePasswordArgs = {
 export type Post = {
   __typename?: 'Post';
   id: Scalars['Float'];
+  title: Scalars['String'];
+  text: Scalars['String'];
+  points: Scalars['Float'];
+  creatorId: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  title: Scalars['String'];
 };
 
 export type Query = {
@@ -100,10 +104,10 @@ export type QueryPostArgs = {
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -134,6 +138,20 @@ export type ChangePasswordMutation = (
       { __typename?: 'User' }
       & RegularUserFragment
     )> }
+  ) }
+);
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  text: Scalars['String'];
+}>;
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'creatorId' | 'points'>
   ) }
 );
 
@@ -240,6 +258,23 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreatePostDocument = gql`
+    mutation CreatePost($title: String!, $text: String!) {
+  createPost(title: $title, text: $text) {
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    creatorId
+    points
+  }
+}
+    `;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
